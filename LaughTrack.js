@@ -13,22 +13,22 @@ window.onload = function() {
 	var volumeBar = document.getElementById("volume-bar");
 
 
-	// Event listener for the play/pause button
-	// playButton.addEventListener("click", function() {
-	// 	if (video.paused == true) {
-	// 		// Play the video
-	// 		video.play();
+	//Event listener for the play/pause button
+	playButton.addEventListener("click", function() {
+		if (video.paused == true) {
+			// Play the video
+			video.play();
 
-	// 		// Update the button text to 'Pause'
-	// 		playButton.innerHTML = '<i class="fa fa-play-circle-o fa-3x"></i>';
-	// 	} else {
-	// 		// Pause the video
-	// 		video.pause();
+			// Update the button text to 'Pause'
+			playButton.innerHTML = '<i class="fa fa-play-circle-o fa-3x"></i>';
+		} else {
+			// Pause the video
+			video.pause();
 
-	// 		// Update the button text to 'Play'
-	// 		playButton.innerHTML = '<i class="fa fa-play-circle fa-3x"></i>';
-	// 	}
-	// });
+			// Update the button text to 'Play'
+			playButton.innerHTML = '<i class="fa fa-play-circle fa-3x"></i>';
+		}
+	});
 
 	//play the thing by clicking the video itself
 	video.addEventListener("click", function() {
@@ -37,45 +37,45 @@ window.onload = function() {
 			video.play();
 
 			// Update the button text to 'Pause'
-			// playButton.innerHTML = '<i class="fa fa-play-circle-o fa-3x"></i>';
+			playButton.innerHTML = '<i class="fa fa-play-circle-o fa-3x"></i>';
 		} else {
 			// Pause the video
 			video.pause();
 
 			// Update the button text to 'Play'
-			// playButton.innerHTML = '<i class="fa fa-play-circle fa-3x"></i>';
+			playButton.innerHTML = '<i class="fa fa-play-circle fa-3x"></i>';
 		}
 	});
 
 
-	// // Event listener for the mute button
-	// muteButton.addEventListener("click", function() {
-	// 	if (video.muted == false) {
-	// 		// Mute the video
-	// 		video.muted = true;
+	// Event listener for the mute button
+	muteButton.addEventListener("click", function() {
+		if (video.muted == false) {
+			// Mute the video
+			video.muted = true;
 
-	// 		// Update the button text
-	// 		muteButton.innerHTML = '<i class="fa fa-volume-off fa-3x"></i>';
-	// 	} else {
-	// 		// Unmute the video
-	// 		video.muted = false;
+			// Update the button text
+			muteButton.innerHTML = '<i class="fa fa-volume-off fa-3x"></i>';
+		} else {
+			// Unmute the video
+			video.muted = false;
 
-	// 		// Update the button text
-	// 		muteButton.innerHTML = '<i class="fa fa-volume-up fa-3x"></i>';
-	// 	}
-	// });
+			// Update the button text
+			muteButton.innerHTML = '<i class="fa fa-volume-up fa-3x"></i>';
+		}
+	});
 
 
-	// // Event listener for the full-screen button
-	// fullScreenButton.addEventListener("click", function() {
-	// 	if (video.requestFullscreen) {
-	// 		video.requestFullscreen();
-	// 	} else if (video.mozRequestFullScreen) {
-	// 		video.mozRequestFullScreen(); // Firefox
-	// 	} else if (video.webkitRequestFullscreen) {
-	// 		video.webkitRequestFullscreen(); // Chrome and Safari
-	// 	}
-	// });
+	// Event listener for the full-screen button
+	fullScreenButton.addEventListener("click", function() {
+		if (video.requestFullscreen) {
+			video.requestFullscreen();
+		} else if (video.mozRequestFullScreen) {
+			video.mozRequestFullScreen(); // Firefox
+		} else if (video.webkitRequestFullscreen) {
+			video.webkitRequestFullscreen(); // Chrome and Safari
+		}
+	});
 
 
 	// Event listener for the seek bar
@@ -107,9 +107,9 @@ window.onload = function() {
 		video.play();
 	});
 
-	// // Event listener for the volume bar
-	// volumeBar.addEventListener("change", function() {
-	// 	// Update the video volume
-	// 	video.volume = volumeBar.value;
-	// });
+	// Event listener for the volume bar
+	volumeBar.addEventListener("change", function() {
+		// Update the video volume
+		video.volume = volumeBar.value;
+	});
 }
