@@ -20,13 +20,13 @@ window.onload = function() {
 			video.play();
 
 			// Update the button text to 'Pause'
-			playButton.innerHTML = '<i class="fa fa-play-circle-o fa-3x"></i>';
+			playButton.innerHTML = 'Pause';//'<i class="fa fa-play-circle-o fa-3x"></i>';
 		} else {
 			// Pause the video
 			video.pause();
 
 			// Update the button text to 'Play'
-			playButton.innerHTML = '<i class="fa fa-play-circle fa-3x"></i>';
+			playButton.innerHTML = 'Play';//'<i class="fa fa-play-circle fa-3x"></i>';
 		}
 	});
 
@@ -37,13 +37,13 @@ window.onload = function() {
 			video.play();
 
 			// Update the button text to 'Pause'
-			playButton.innerHTML = '<i class="fa fa-play-circle-o fa-3x"></i>';
+			playButton.innerHTML ='Pause'; //'<i class="fa fa-play-circle-o fa-3x"></i>';
 		} else {
 			// Pause the video
 			video.pause();
 
 			// Update the button text to 'Play'
-			playButton.innerHTML = '<i class="fa fa-play-circle fa-3x"></i>';
+			playButton.innerHTML = 'Play';//<i class="fa fa-play-circle fa-3x"></i>';
 		}
 	});
 
@@ -55,13 +55,13 @@ window.onload = function() {
 			video.muted = true;
 
 			// Update the button text
-			muteButton.innerHTML = '<i class="fa fa-volume-off fa-3x"></i>';
+			muteButton.innerHTML = 'Unmute';//'<i class="fa fa-volume-off fa-3x"></i>';
 		} else {
 			// Unmute the video
 			video.muted = false;
 
 			// Update the button text
-			muteButton.innerHTML = '<i class="fa fa-volume-up fa-3x"></i>';
+			muteButton.innerHTML = 'Mute';//<i class="fa fa-volume-up fa-3x"></i>';
 		}
 	});
 
