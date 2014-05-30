@@ -1,10 +1,19 @@
+var volumeMeter;
+var volumeMeterGradient;
+var volumeMeterContext;
+var volumeHistory;
+var volumeHistoryGradient;
+var volumeHistoryContext;
+var volumeHistoryData = [];
+var startDate;
+var duration = 150000;
+
 // respond to events
 document.addEventListener("microphoneConnected", updateConnectionStatus);
 document.addEventListener("volumeCrossedAboveThreshold", logThresholdCross);
 document.addEventListener("volumeCrossedBelowThreshold", logThresholdCross);
-var volumeMeter;
-var volumeMeterGradient;
-var volumeMeterContext;
+
+
 
 function updateConnectionStatus(e)
 {
@@ -52,8 +61,17 @@ function updateConnectionStatus(e)
 		volumeMeterGradient.addColorStop(1, '#500000');
 		volumeMeterContext.fillStyle = volumeMeterGradient;
 
+		volumeHistory = document.querySelector('#volumeHistory');
+		volumeHistory.width = 1210;
+		volumeHistory.height = 80;
+		volumeHistoryContext = volumeMeter.getContext('2d');
+		volumeHistoryGradient = volumeHistoryContext.createLinearGradient(0,0,0,80);
+		volumeHistoryGradient.addColorStop(0, '#FFFF00');
+		volumeHistoryGradient.addColorStop(1, '#500000');
+		startDate = new Date();
 
 		drawVolumeMeter();
+		drawVolumeHistory();
 	}
 	else
 	{
@@ -81,14 +99,34 @@ function drawVolumeMeter()
 
 	var heightRatio = 80 / 200;
 
-	volumeMeterContext.fillRect(0,(200 - currentVolume()) * heightRatio,50,200 * heightRatio);
+	volumeMeterContext.fillRect(0, (200 - currentVolume()) * heightRatio, 50, 200 * heightRatio);
 	requestAnimationFrame(drawVolumeMeter);
 }
 
 // setTimeout for scrolling log
 function drawVolumeHistory()
 {
+	volumeHistoryData.push({'volume':currentVolume(),'time' : new Date() - startDate});
+
+	var widthRatio = volumeHistory.width / duration;
+	var heightRatio = volumeHistory.height / 200;
 
 
+	var volumeHistoryContext = volumeHistory.getContext('2d');
+	volumeHistoryContext.clearRect(0,0, volumeHistory.width, volumeHistory.height);
+
+	volumeHistoryContext.fillStyle = volumeHistoryGradient;
+
+	volumeHistoryContext.beginPath();
+	volumeHistoryContext.moveTo(0, volumeHistory.height);
+
+	for (var i = 0; i < volumeHistoryData.length; i++)
+	{
+		volumeHistoryContext.lineTo(volumeHistoryData[i].time * widthRatio, (200 - volumeHistoryData[i].volume) * heightRatio);
+	}
+
+	volumeHistoryContext.lineTo(volumeHistoryData[volumeHistoryData.length - 1].time * widthRatio, volumeHistory.height);
+	volumeHistoryContext.fill();
+
+	setTimeout(drawVolumeHistory, 500);
 }
-
