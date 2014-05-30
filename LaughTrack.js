@@ -2,6 +2,7 @@ window.onload = function() {
 
 	// Video
 	var video = document.getElementById("video");
+	var videoContainer = document.getElementById("video-container");
 
 	// Buttons
 	var playButton = document.getElementById("play-pause");
@@ -12,104 +13,67 @@ window.onload = function() {
 	var seekBar = document.getElementById("seek-bar");
 	var volumeBar = document.getElementById("volume-bar");
 
+	// Meta
+	var title = document.getElementById("title");
 
-	//Event listener for the play/pause button
-	playButton.addEventListener("click", function() {
-		if (video.paused == true) {
-			// Play the video
-			video.play();
+	var times = [];
 
-			// Update the button text to 'Pause'
-			playButton.innerHTML = 'Pause';//'<i class="fa fa-play-circle-o fa-3x"></i>';
-		} else {
-			// Pause the video
-			video.pause();
+// --------------------- vertically center ---------------------
 
-			// Update the button text to 'Play'
-			playButton.innerHTML = 'Play';//'<i class="fa fa-play-circle fa-3x"></i>';
+	verticallyCenter ();
+	window.onresize = verticallyCenter;
+
+	function verticallyCenter()
+	{
+		//video container
+		if ((window.innerHeight - videoContainer.clientHeight) > 0) {
+			value = ((window.innerHeight - videoContainer.clientHeight)/2)
+			videoContainer.setAttribute("style", "margin-top:" + value.toString() + "px");
 		}
-	});
+		//title
+			value = ((videoContainer.clientHeight - title.offsetHeight)/2)
+			title.setAttribute("style", "top:" + value.toString() + "px");
+	}
+
+// --------------------- controls ---------------------
 
 	//play the thing by clicking the video itself
-	video.addEventListener("click", function() {
+	title.addEventListener("click", function() {
 		if (video.paused == true) {
 			// Play the video
 			video.play();
 
-			// Update the button text to 'Pause'
-			playButton.innerHTML ='Pause'; //'<i class="fa fa-play-circle-o fa-3x"></i>';
 		} else {
 			// Pause the video
 			video.pause();
-
-			// Update the button text to 'Play'
-			playButton.innerHTML = 'Play';//<i class="fa fa-play-circle fa-3x"></i>';
 		}
+		// console.log ("The current of the video is: " + video.currentTime);
+	});
+
+	video.addEventListener("play", function() {
+		title.style.opacity = '0';
+	});
+
+	video.addEventListener("pause", function() {
+		title.style.opacity = '1';
 	});
 
 
-	// Event listener for the mute button
-	muteButton.addEventListener("click", function() {
-		if (video.muted == false) {
-			// Mute the video
-			video.muted = true;
 
-			// Update the button text
-			muteButton.innerHTML = 'Unmute';//'<i class="fa fa-volume-off fa-3x"></i>';
-		} else {
-			// Unmute the video
-			video.muted = false;
+// --------------------- get and output time ---------------------
 
-			// Update the button text
-			muteButton.innerHTML = 'Mute';//<i class="fa fa-volume-up fa-3x"></i>';
-		}
-	});
+	addEventListener("keydown", function(event){
+		console.log ("The current of the video is: " + video.currentTime);
+		times.push(video.currentTime);
+  	});
 
-
-	// Event listener for the full-screen button
-	fullScreenButton.addEventListener("click", function() {
-		if (video.requestFullscreen) {
-			video.requestFullscreen();
-		} else if (video.mozRequestFullScreen) {
-			video.mozRequestFullScreen(); // Firefox
-		} else if (video.webkitRequestFullscreen) {
-			video.webkitRequestFullscreen(); // Chrome and Safari
-		}
-	});
-
-
-	// Event listener for the seek bar
-	seekBar.addEventListener("change", function() {
-		// Calculate the new time
-		var time = video.duration * (seekBar.value / 100);
-
-		// Update the video time
-		video.currentTime = time;
-	});
-
-	
-	// Update the seek bar as the video plays
-	video.addEventListener("timeupdate", function() {
+	video.addEventListener("ended", function() {
 		// Calculate the slider value
-		var value = (100 / video.duration) * video.currentTime;
-
-		// Update the slider value
-		seekBar.value = value;
+		// console.log (video.currentTime);
+		console.log ("Ended!");
+		title.style.opacity = '1';
+		console.log(times);
 	});
 
-	// Pause the video when the seek handle is being dragged
-	seekBar.addEventListener("mousedown", function() {
-		video.pause();
-	});
 
-	// Play the video when the seek handle is dropped
-	seekBar.addEventListener("mouseup", function() {
-		video.play();
-	});
-
-	// Event listener for the volume bar
-	volumeBar.addEventListener("change", function() {
-		// Update the video volume
-		video.volume = volumeBar.value;
-	});
 }
