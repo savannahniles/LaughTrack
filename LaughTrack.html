@@ -4,30 +4,25 @@
 	<meta charset="utf-8">
 	<title>Video Page Demo with Custon Controls</title>
 
+
 	<link rel="stylesheet" href="LaughTrack.css">
-	<link href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
-	<!-- <link rel="stylesheet" href="font-awesome.min.css"> -->
+	<link href="http://netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
 </head>
 <body>
 	<div id="video-container">
 		<!-- Video -->
-		<video id="video" src="assets/thisistheend.mp4" poster="assets/poster1.png" preload="auto">
+		<video id="video" src="assets/thisistheend.mp4" poster="assets/poster1.png" preload="auto" controls>
 		</video>
-		<!-- Video Controls -->
-		<div id="video-controls">
-			<button type="button" id="play-pause" class="play">Play<!-- <i class="fa fa-play-circle fa-3x"></i> --></button>
-			<!-- <button type="button" id="twitter"><i class="fa fa-twitter fa-3x"></i></button> -->
-			<input type="range" id="seek-bar" value="0">
-			<button type="button" id="mute">Mute<!-- <i class="fa fa-volume-up fa-3x"></i> --></button>
-			<input type="range" id="volume-bar" min="0" max="1" step="0.1" value="1">
-			<button type="button" id="full-screen">Full Screen<!-- <i class="fa fa-arrows-alt fa-3x"></i> --></button>
+		<div id="title">
+			<h2>Now Showing</h2>
+			<h1>This is the End</h1>
+			<h2>LaughTrack clips video highlights by listening to the audience.</h2>
+			<!-- <h2>LaughTrack stitches video highlights by listening to the audience.</h2> -->
+			<div class="hr"></div>
+			<h2><i class="fa fa-microphone fa-lg"></i></h2>
 		</div>
 	</div>
 
 	<script src="LaughTrack.js"></script>
 </body>
 </html>
-
-
-<!-- <a class="play icon" title="Play" href="#"></a>
-<a class="pause icon" title="Pause" href="#"></a> -->
