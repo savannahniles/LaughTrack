@@ -5,6 +5,10 @@ var _currentVolume = 0;
 var threshold = 80;
 var aboveThreshold = false;
 
+var mediaStreamSource
+var analyserNode;
+var scriptProcessorNode;
+
 // event names
 var microphoneConnectedEventName = "microphoneConnected";
 var microphoneConnectFailedEventName = "microphoneConnectFailed";
@@ -86,20 +90,20 @@ function mediaSuccessCallback(stream)
 		var audioContext = new AudioContext();
 
 		// Create an audio node from the stream.
-		var mediaStreamSource = audioContext.createMediaStreamSource(stream);
+		mediaStreamSource = audioContext.createMediaStreamSource(stream);
 
 		// set up an analyser node
-		var analyserNode = audioContext.createAnalyser();
+		analyserNode = audioContext.createAnalyser();
 		analyserNode.smoothingTimeConstant = 0.3; // mess around with this value to produce less jittery results!!
 		analyserNode.fftSize = 1024; // this creates 512 buckets
 
 		// set up a javascript node
-		var scriptProcessorNode = audioContext.createScriptProcessor(2048, 1, 1); // called every 2048 frames
+		scriptProcessorNode = audioContext.createScriptProcessor(2048, 1, 1); // called every 2048 frames
 		scriptProcessorNode.onaudioprocess = function() {
 			var currentDateAndTime = new Date();
 
 			// get the data
-			var array = new Uint8Array(analyserNode.frequencyBinCount); // consier.....
+			var array = new Uint8Array(analyserNode.frequencyBinCount); // consider re-using array so we don't have to recreate one each time
 			analyserNode.getByteFrequencyData(array);
 
 			// calculate the average volume
@@ -111,7 +115,7 @@ function mediaSuccessCallback(stream)
 
 			var average = values / array.length;
 			_currentVolume = average;
-			
+
 			// check to see if event should fire
 			if (aboveThreshold)
 			{
@@ -142,9 +146,6 @@ function mediaSuccessCallback(stream)
 				}
 			}
 		};
-
-		// create a gain node to mute the output of the microphone
-
 
 		// Connect up the nodes
 		mediaStreamSource.connect(analyserNode);
