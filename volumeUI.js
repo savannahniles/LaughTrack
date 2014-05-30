@@ -59,8 +59,8 @@ function updateConnectionStatus(e)
 		// create gradient
 		volumeMeterContext = volumeMeter.getContext('2d');
 		volumeMeterGradient = volumeMeterContext.createLinearGradient(0, 0, 0, 80);
-		volumeMeterGradient.addColorStop(0, '#FFFF00');
-		volumeMeterGradient.addColorStop(1, '#500000');
+		volumeMeterGradient.addColorStop(0, '#FF3300');
+		volumeMeterGradient.addColorStop(1, '#ACACAC');
 		volumeMeterContext.fillStyle = volumeMeterGradient;
 
 		volumeHistory = document.querySelector('#volumeHistory');
@@ -68,8 +68,10 @@ function updateConnectionStatus(e)
 		volumeHistory.height = 80;
 		volumeHistoryContext = volumeMeter.getContext('2d');
 		volumeHistoryGradient = volumeHistoryContext.createLinearGradient(0,0,0,80);
-		volumeHistoryGradient.addColorStop(0, '#FFFF00');
-		volumeHistoryGradient.addColorStop(1, '#500000');
+		// volumeHistoryGradient.addColorStop(0, '#ef6730');
+		// volumeHistoryGradient.addColorStop(1, '#68e5c2');
+		volumeHistoryGradient.addColorStop(0, '#FF3300');
+		volumeHistoryGradient.addColorStop(1, '#ACACAC');
 		startDate = new Date();
 
 		drawVolumeMeter();

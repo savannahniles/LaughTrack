@@ -15,6 +15,7 @@ window.onload = function() {
 
 	// Meta
 	var title = document.getElementById("title");
+	var dataCanvas = document.getElementById("canvas");
 
 	var times = [];
 
@@ -29,6 +30,8 @@ window.onload = function() {
 		if ((window.innerHeight - videoContainer.clientHeight) > 0) {
 			value = ((window.innerHeight - videoContainer.clientHeight)/2)
 			videoContainer.setAttribute("style", "margin-top:" + value.toString() + "px");
+			//set data canvas height
+			dataCanvas.setAttribute("style", "height:" + value.toString() + "px");
 		}
 		//title
 			value = ((videoContainer.clientHeight - title.offsetHeight)/2)
