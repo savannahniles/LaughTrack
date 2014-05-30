@@ -2,8 +2,9 @@ var supportsSourceSelection = false;
 var availableMicrophones = [];
 var selectedMicrophoneId = "";
 var _currentVolume = 0;
-var threshold = 80;
+var threshold = 0.8;
 var aboveThreshold = false;
+var pastData = [];
 
 var mediaStreamSource
 var analyserNode;
@@ -92,34 +93,34 @@ function mediaSuccessCallback(stream)
 		// Create an audio node from the stream.
 		mediaStreamSource = audioContext.createMediaStreamSource(stream);
 
-		// set up an analyser node
-		analyserNode = audioContext.createAnalyser();
-		analyserNode.smoothingTimeConstant = 0.3; // mess around with this value to produce less jittery results!!
-		analyserNode.fftSize = 1024; // this creates 512 buckets
-
 		// set up a javascript node
 		scriptProcessorNode = audioContext.createScriptProcessor(2048, 1, 1); // called every 2048 frames
-		scriptProcessorNode.onaudioprocess = function() {
+		scriptProcessorNode.onaudioprocess = function(e) {
 			var currentDateAndTime = new Date();
+			
+			var array = Array.prototype.slice.call(e.inputBuffer.getChannelData(0)); // what is the zero for?
+			var buffer = pastData.concat(array);
+			pastData = array.slice(0);
+			var sum = 0;
 
-			// get the data
-			var array = new Uint8Array(analyserNode.frequencyBinCount); // consider re-using array so we don't have to recreate one each time
-			analyserNode.getByteFrequencyData(array);
-
-			// calculate the average volume
-			var values = 0;
-			for (var i = 0; i < array.length; i++)
+			for (var i = 0; i < buffer.length; i++)
 			{
-				values += array[i];
+				sum += buffer[i] * buffer[i];
 			}
 
-			var average = values / array.length;
-			_currentVolume = average;
+			var rms = Math.sqrt(sum / buffer.length);
+			var decibels = 20 * log10(rms);
+			decibels += 60;
+			if (decibels < 0)
+			{
+				decibels = 0;
+			}
+			_currentVolume = decibels;
 
 			// check to see if event should fire
 			if (aboveThreshold)
 			{
-				if (average < threshold)
+				if (decibels < threshold)
 				{
 					aboveThreshold = false;
 					var event = new CustomEvent("volumeCrossedBelowThreshold", {
@@ -133,7 +134,7 @@ function mediaSuccessCallback(stream)
 			}
 			else
 			{
-				if (average > threshold)
+				if (decibels > threshold)
 				{
 					aboveThreshold = true;
 					var event = new CustomEvent("volumeCrossedAboveThreshold", {
@@ -148,8 +149,7 @@ function mediaSuccessCallback(stream)
 		};
 
 		// Connect up the nodes
-		mediaStreamSource.connect(analyserNode);
-		analyserNode.connect(scriptProcessorNode);
+		mediaStreamSource.connect(scriptProcessorNode);
 		scriptProcessorNode.connect(audioContext.destination) // the scriptProcessorNode needs to be connected otherwise it won't be called
 	
 		// the microphone should now be properly connected.
@@ -160,6 +160,15 @@ function mediaSuccessCallback(stream)
 		});
 		document.dispatchEvent(event);
 	}
+}
+
+function log10(value)
+{
+	var base = 10;
+	var denominator = 1;
+	denominator = Math.log(base);
+	var answer = Math.log(value) / denominator;
+	return answer;
 }
 
 function currentVolume()

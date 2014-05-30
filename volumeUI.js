@@ -7,6 +7,8 @@ var volumeHistoryContext;
 var volumeHistoryData = [];
 var startDate;
 var duration = 150000;
+var maximumVolume = 60;
+
 
 // respond to events
 document.addEventListener("microphoneConnected", updateConnectionStatus);
@@ -97,11 +99,12 @@ function drawVolumeMeter()
 {
 	volumeMeterContext.clearRect(0, 0, 50, 80);
 
-	var heightRatio = 80 / 200;
+	var heightRatio = 80 / maximumVolume;
 
-	volumeMeterContext.fillRect(0, (200 - currentVolume()) * heightRatio, 50, 200 * heightRatio);
+	volumeMeterContext.fillRect(0, (maximumVolume - currentVolume()) * heightRatio, 50, maximumVolume * heightRatio);
 	requestAnimationFrame(drawVolumeMeter);
 }
+
 
 // setTimeout for scrolling log
 function drawVolumeHistory()
@@ -109,7 +112,7 @@ function drawVolumeHistory()
 	volumeHistoryData.push({'volume':currentVolume(),'time' : new Date() - startDate});
 
 	var widthRatio = volumeHistory.width / duration;
-	var heightRatio = volumeHistory.height / 200;
+	var heightRatio = volumeHistory.height / maximumVolume;
 
 
 	var volumeHistoryContext = volumeHistory.getContext('2d');
@@ -122,7 +125,7 @@ function drawVolumeHistory()
 
 	for (var i = 0; i < volumeHistoryData.length; i++)
 	{
-		volumeHistoryContext.lineTo(volumeHistoryData[i].time * widthRatio, (200 - volumeHistoryData[i].volume) * heightRatio);
+		volumeHistoryContext.lineTo(volumeHistoryData[i].time * widthRatio, (maximumVolume - volumeHistoryData[i].volume) * heightRatio);
 	}
 
 	volumeHistoryContext.lineTo(volumeHistoryData[volumeHistoryData.length - 1].time * widthRatio, volumeHistory.height);
