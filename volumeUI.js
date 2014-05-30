@@ -12,6 +12,7 @@ var maximumVolume = 60;
 
 // respond to events
 document.addEventListener("microphoneConnected", updateConnectionStatus);
+document.addEventListener("microphoneConnectFailed", updateConnectionStatus);
 document.addEventListener("volumeCrossedAboveThreshold", logThresholdCross);
 document.addEventListener("volumeCrossedBelowThreshold", logThresholdCross);
 
