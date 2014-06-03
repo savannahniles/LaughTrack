@@ -2,7 +2,7 @@ var supportsSourceSelection = false;
 var availableMicrophones = [];
 var selectedMicrophoneId = "";
 var _currentVolume = 0;
-var threshold = 0.8;
+var threshold = 40;
 var aboveThreshold = false;
 var pastData = [];
 
