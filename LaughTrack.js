@@ -20,23 +20,53 @@ window.onload = function() {
 	var volumeHistory = document.getElementById("volumeHistory");
 	var volumeMeter = document.getElementById("volumeMeterContainer");
 
+	//canvas
+	var volumeMeterCanvas;
+	var volumeMeterGradient;
+	var volumeMeterContext;
+	var volumeHistory;
+	var volumeHistoryGradient;
+	var volumeHistoryContext;
+	var volumeHistoryData = [];
+	var startDate;
+
+	var maximumVolume = 60;
+
 // --------------------- vertically center ---------------------
 
-	verticallyCenter ();
+	verticallyCenter;
 	window.onresize = verticallyCenter;
 
 	function verticallyCenter()
 	{
+		console.log ("resize");
+		//set data canvas height
+		volumeHistory.height = 40; 
+		console.log (videoContainer.clientWidth);
+		volumeHistory.width = videoContainer.clientWidth;
 		//video container
 		if ((window.innerHeight - videoContainer.clientHeight) > 0) {
 			value = ((window.innerHeight - videoContainer.clientHeight)/2)
 			videoContainer.setAttribute("style", "margin-top:" + value.toString() + "px");
 			//set data canvas height
-			volumeHistory.setAttribute("style", "height:" + value.toString() + "px");
+			if (value > 40) {
+				volumeHistory.setAttribute("style", "height:" + value.toString() + "px");
+				volumeHistory.height = value; //((window.innerHeight - videoContainer.clientHeight)/2);
+			}
+			console.log (volumeHistory.height);
 		}
 		//title
 			value = ((videoContainer.clientHeight - title.offsetHeight)/2)
 			title.setAttribute("style", "top:" + value.toString() + "px");
+
+		volumeHistoryContext = volumeMeterCanvas.getContext('2d');
+		volumeHistoryGradient = volumeHistoryContext.createLinearGradient(0,0,0,volumeHistory.height);
+		// volumeHistoryGradient.addColorStop(0, '#ef6730');
+		// volumeHistoryGradient.addColorStop(1, '#68e5c2');
+		volumeHistoryGradient.addColorStop(0, '#FF3300');
+		volumeHistoryGradient.addColorStop(1, '#ACACAC');
+		// startDate = new Date();
+		volumeHistoryContext.fillStyle = volumeHistoryGradient;
 	}
 
 // --------------------- controls ---------------------
@@ -56,14 +86,14 @@ window.onload = function() {
 
 	video.addEventListener("play", function() {
 		title.style.opacity = '0';
-		volumeHistory.style.opacity = '1';
+		// volumeHistory.style.opacity = '1';
 		volumeMeter.style.opacity = '1';
 
 	});
 
 	video.addEventListener("pause", function() {
 		title.style.opacity = '1';
-		volumeHistory.style.opacity = '0';
+		// volumeHistory.style.opacity = '0';
 		volumeMeter.style.opacity = '0';
 
 	});
@@ -86,26 +116,6 @@ window.onload = function() {
 		volumeMeter.style.opacity = '0';
 		console.log(times);
 	});
-
-
-
-
-var volumeMeterCanvas;
-var volumeMeterGradient;
-var volumeMeterContext;
-var volumeHistory;
-var volumeHistoryGradient;
-var volumeHistoryContext;
-var volumeHistoryData = [];
-var startDate;
-var duration; //= video.duration*1000;
-
-	video.addEventListener('loadedmetadata', function() {
-	  var duration = video.duration;
-	  console.log (duration);
-	}, false);
-
-var maximumVolume = 60;
 
 
 // respond to events
@@ -157,19 +167,8 @@ function updateConnectionStatus(e)
 		volumeMeterGradient.addColorStop(1, '#ACACAC');
 		volumeMeterContext.fillStyle = volumeMeterGradient;
 
-		volumeHistory = document.querySelector('#volumeHistory');
-		volumeHistory.width = videoContainer.clientWidth;
-		volumeHistory.height = ((window.innerHeight - videoContainer.clientHeight)/2);
-		volumeHistoryContext = volumeMeterCanvas.getContext('2d');
-		volumeHistoryGradient = volumeHistoryContext.createLinearGradient(0,0,0,80);
-		// volumeHistoryGradient.addColorStop(0, '#ef6730');
-		// volumeHistoryGradient.addColorStop(1, '#68e5c2');
-		volumeHistoryGradient.addColorStop(0, '#FF3300');
-		volumeHistoryGradient.addColorStop(1, '#ACACAC');
-		// startDate = new Date();
-
 		drawVolumeMeter();
-		//drawVolumeHistory();
+		drawVolumeHistory();
 	}
 	else
 	{
@@ -214,23 +213,26 @@ function drawVolumeMeter()
 // setTimeout for scrolling log
 function drawVolumeHistory()
 {
-	if (!video.paused && !video.ended) {
-		volumeHistoryData.push({'volume':currentVolume(),'time' : video.currentTime});
-	}
-
-	if (volumeHistoryData.length == 0)
-	{
+	if (video.paused || video.ended) {
+		if (video.paused) {
+			setTimeout(drawVolumeHistory, video.duration / 10); // this will give us 10,000 data points
+			//may have to make bigger if tons of fucking data points at end
+		}
 		return;
 	}
 
-	var widthRatio = volumeHistory.width / duration;
+	volumeHistoryData.push({'volume':currentVolume(),'time' : video.currentTime});
+
+	var widthRatio = volumeHistory.width / video.duration;
 	var heightRatio = volumeHistory.height / maximumVolume;
+	// console.log (widthRatio + " " + heightRatio);
 
 
 	var volumeHistoryContext = volumeHistory.getContext('2d');
 	volumeHistoryContext.clearRect(0,0, volumeHistory.width, volumeHistory.height);
 
 	volumeHistoryContext.fillStyle = volumeHistoryGradient;
+
 
 	volumeHistoryContext.beginPath();
 	volumeHistoryContext.moveTo(0, volumeHistory.height);
@@ -240,7 +242,7 @@ function drawVolumeHistory()
 		volumeHistoryContext.lineTo(volumeHistoryData[i].time * widthRatio, (maximumVolume - volumeHistoryData[i].volume) * heightRatio);
 	}
 
-	console.log(volumeHistoryData);
+	// console.log(volumeHistoryData);
 
 	volumeHistoryContext.lineTo(volumeHistoryData[volumeHistoryData.length - 1].time * widthRatio, volumeHistory.height);
 	volumeHistoryContext.fill();

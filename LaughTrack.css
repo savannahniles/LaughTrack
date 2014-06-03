@@ -116,7 +116,7 @@ button:focus {
 }
 
 #volumeMeterContainer {
-		opacity: 0;
+	opacity: 0;
 	-webkit-transition: opacity .3s;
 	-moz-transition: opacity .3s;
 	-o-transition: opacity .3s;
@@ -141,7 +141,7 @@ button:focus {
 
 #volumeHistory {
 	background: black;
-	opacity: 0;
+	/*opacity: 0;*/
 	-webkit-transition: opacity .3s;
 	-moz-transition: opacity .3s;
 	-o-transition: opacity .3s;
